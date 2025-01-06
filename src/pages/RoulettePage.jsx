@@ -3,7 +3,7 @@ import TimeArticle from "../components/timeArticle";
 import '../css/roulette.css'
 const RoulettePage = () => {
 
-    const participants = ["A", "B", "C", "A"];
+    const participants = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
     const [itemStyles, setItemStyles] = useState([])
     const [lineStyles, setLineStyles] = useState([])
     const [current, setCurrent] = useState(0)
@@ -28,20 +28,35 @@ const RoulettePage = () => {
     }
 
     function angle() {
-        // return -current * segment() // 정가운데
+        /*
+        315 - 45 : 1
+        45 - 135 : 2
+        135 - 225 : 3
+        225 - 315 : 4
+
+        segment : 90
+        offset : 45
+         */
+        if (count == 0)
+            return -current * segment() // 정가운데
+        console.log("nextCurrent :: " + current)
         let temp = -current * segment();
+        console.log("nextTemp :: " + temp)
         let randomOffset = Math.floor(Math.random() * segment()) - offset() - 1;
+        console.log("randomOffset : ", randomOffset)
         let cycle = count * 360 * 5; // 5바퀴
-        return -(temp + randomOffset + cycle)
+        console.log("cycle :: " + cycle)
+        return (temp + randomOffset + cycle)
     }
 
     function rouletteStyle() {
+        console.log("count :: " + count)
         return { "transform": "rotate(" + angle() + "deg)" }
     }
 
     function currentItem(randomCurrent) {
         console.log("current :: " + randomCurrent)
-        console.log("participants :: " +  participants[randomCurrent])
+        console.log("participants :: " + participants[randomCurrent])
         return participants[randomCurrent]
     }
 
@@ -54,8 +69,10 @@ const RoulettePage = () => {
     }
 
     useEffect(() => {
-        setItemStyles([])
-        setLineStyles([])
+        if (itemStyles.length > 0)
+            setItemStyles([])
+        if (lineStyles.length > 0)
+            setLineStyles([])
         participants.map((participant, idx) => {
             const netItemStyles = { "transform": "rotate(" + segment() * idx + "deg)" }
             const newLineStyles = { "transform": "rotate(" + (segment() * idx + offset()) + "deg)" }
@@ -63,7 +80,8 @@ const RoulettePage = () => {
             setLineStyles(prevsetLineStyles => [...prevsetLineStyles, newLineStyles])
         })
     }, [])
-
+    
+    console.log("lineStyles :: ", lineStyles)
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white flex flex-col items-center">
             <header className="w-full bg-purple-500 py-4 shadow-md">
