@@ -3,10 +3,11 @@ import TimeArticle from "../components/timeArticle";
 import '../css/roulette.css'
 const RoulettePage = () => {
 
-    const participants = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
+    const participants = ["A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D"];
     const [itemStyles, setItemStyles] = useState([])
     const [lineStyles, setLineStyles] = useState([])
     const [current, setCurrent] = useState(0)
+    const [isCurrentLoading, setIsCurrentLoading] = useState(false)
     const [count, setCount] = useState(0)
     const [history, setHistory] = useState([])
 
@@ -28,39 +29,35 @@ const RoulettePage = () => {
     }
 
     function angle() {
-        /*
-        315 - 45 : 1
-        45 - 135 : 2
-        135 - 225 : 3
-        225 - 315 : 4
-
-        segment : 90
-        offset : 45
-         */
+        // let temp = current * segment();
+        // let cycle = count * 360 * 5; // 5바퀴
+        // return -(temp + cycle) // 정가운데
         if (count == 0)
             return -current * segment() // 정가운데
-        console.log("nextCurrent :: " + current)
-        let temp = -current * segment();
-        console.log("nextTemp :: " + temp)
-        let randomOffset = Math.floor(Math.random() * segment()) - offset() - 1;
-        console.log("randomOffset : ", randomOffset)
-        let cycle = count * 360 * 5; // 5바퀴
-        console.log("cycle :: " + cycle)
-        return (temp + randomOffset + cycle)
+        let temp = current * segment();
+        let random = Math.random();
+        // let random = 1
+        while(random < 0.05){  // 랜덤 난수는 0.05 ~ 1 사이여야 함
+            console.log("miss : ", random)
+            random = Math.random()
+        }
+        console.log(random)
+        let randomOffset = Math.floor(random * segment()) - offset() - 1; // 칸 안에 랜덤 위치
+        let cycle = count * 360 * 1; // 5바퀴
+        return -(temp + randomOffset + cycle)
     }
 
     function rouletteStyle() {
-        console.log("count :: " + count)
         return { "transform": "rotate(" + angle() + "deg)" }
     }
 
     function currentItem(randomCurrent) {
-        console.log("current :: " + randomCurrent)
         console.log("participants :: " + participants[randomCurrent])
         return participants[randomCurrent]
     }
 
     function play() {
+        setIsCurrentLoading(false)
         setCount(count + 1)
         const randomCurrent = Math.floor(Math.random() * participants.length)
         setCurrent(randomCurrent)
@@ -80,7 +77,7 @@ const RoulettePage = () => {
             setLineStyles(prevsetLineStyles => [...prevsetLineStyles, newLineStyles])
         })
     }, [])
-    
+
     console.log("lineStyles :: ", lineStyles)
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white flex flex-col items-center">
@@ -126,10 +123,10 @@ const RoulettePage = () => {
                 </section>
 
                 {/* 당첨자 발표 */}
-                {history && (
+                {isCurrentLoading && (
                     <section className="bg-white rounded-lg shadow-lg p-6">
                         <h2 className="text-xl font-bold text-purple-600">당첨자</h2>
-                        <p className="mt-4 text-2xl font-semibold text-teal-500">{history[0]}님 축하합니다! 🎉</p>
+                        <p className="mt-4 text-2xl font-semibold text-teal-500">{participants[current]}님 축하합니다! 🎉</p>
                     </section>
                 )}
             </main>
