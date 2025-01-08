@@ -3,13 +3,27 @@ import TimeArticle from "../components/timeArticle";
 import '../css/roulette.css'
 const RoulettePage = () => {
 
-    const participants = ["A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D","A", "B", "C", "D"];
+    const participants = ["A", "B", "C", "D"];
     const [itemStyles, setItemStyles] = useState([])
     const [lineStyles, setLineStyles] = useState([])
     const [current, setCurrent] = useState(0)
     const [isCurrentLoading, setIsCurrentLoading] = useState(false)
     const [count, setCount] = useState(0)
     const [history, setHistory] = useState([])
+    const [isTimeRemaining, setIsTimeRemaining] = useState(true)
+
+    useEffect(() => {
+        if (itemStyles.length > 0)
+            setItemStyles([])
+        if (lineStyles.length > 0)
+            setLineStyles([])
+        participants.map((participant, idx) => {
+            const netItemStyles = { "transform": "rotate(" + segment() * idx + "deg)" }
+            const newLineStyles = { "transform": "rotate(" + (segment() * idx + offset()) + "deg)" }
+            setItemStyles(prevItemStyles => [...prevItemStyles, netItemStyles])
+            setLineStyles(prevsetLineStyles => [...prevsetLineStyles, newLineStyles])
+        })
+    }, [])
 
     // 참가자를 각 섹션에 맞게 확장한 배열
     const expandedParticipants = [];
@@ -37,8 +51,8 @@ const RoulettePage = () => {
         let temp = current * segment();
         let random = Math.random();
         // let random = 1
-        while(random < 0.05){  // 랜덤 난수는 0.05 ~ 1 사이여야 함
-            console.log("miss : ", random)
+        while (random * segment() < 2) {  // random * segment() 값이 2보다 작으면 앞에 라인에 걸침
+            console.log("miss :: " + random)
             random = Math.random()
         }
         console.log(random)
@@ -65,20 +79,11 @@ const RoulettePage = () => {
         setHistory(prevHistory => [...prevHistory, currentItem(randomCurrent)])
     }
 
-    useEffect(() => {
-        if (itemStyles.length > 0)
-            setItemStyles([])
-        if (lineStyles.length > 0)
-            setLineStyles([])
-        participants.map((participant, idx) => {
-            const netItemStyles = { "transform": "rotate(" + segment() * idx + "deg)" }
-            const newLineStyles = { "transform": "rotate(" + (segment() * idx + offset()) + "deg)" }
-            setItemStyles(prevItemStyles => [...prevItemStyles, netItemStyles])
-            setLineStyles(prevsetLineStyles => [...prevsetLineStyles, newLineStyles])
-        })
-    }, [])
+    function handleIsTimeRemaining() {
+        setIsTimeRemaining(false)
+    }
 
-    console.log("lineStyles :: ", lineStyles)
+
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-100 to-white flex flex-col items-center">
             <header className="w-full bg-purple-500 py-4 shadow-md">
@@ -88,7 +93,7 @@ const RoulettePage = () => {
             <main className="flex-grow w-full max-w-2xl px-6 mt-10">
                 <section className="bg-white rounded-lg shadow-lg p-6 mb-6 flex justify-center items-center relative">
                     ⏱️ 참여까지 남은 시간
-                    {/* <div> <TimeArticle /></div> */}
+                    <TimeArticle handleIsTimeRemaining={handleIsTimeRemaining} />
                 </section>
                 <section className="bg-white rounded-lg shadow-lg p-6 mb-6 flex justify-center items-center relative">
                     <div>

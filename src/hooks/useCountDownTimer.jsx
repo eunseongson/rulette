@@ -14,7 +14,6 @@ export default function useCountDownTimer(targetTime) {
       const targetDate = dayjs(targetTime); //전달받는 기한 날짜
       const duration = dayjs.duration(targetDate.diff(currentTime)); //diff:차이구하기/duration:차이구한것을 객체로 반환해줌
 
-      console.log(duration.asMilliseconds())
       if (duration.asMilliseconds() > 0) {
         const days = String(duration.days()).padStart(2, '0'); //padStart(목표문자열길이,모자라면채워지는값)
         const hours = String(duration.hours()).padStart(2, '0');
