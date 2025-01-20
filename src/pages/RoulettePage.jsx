@@ -42,7 +42,7 @@ const RoulettePage = () => {
         return segment() / 2
     }
 
-    function angle() {
+    function angle() { 
         // let temp = current * segment();
         // let cycle = count * 360 * 5; // 5바퀴
         // return -(temp + cycle) // 정가운데
